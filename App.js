@@ -5,6 +5,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Button, Tabs, Tab, Icon } from 'react-native-elements';
 import _ from 'lodash';
 import type { TodoItem } from './App.js.flow';
+import AddTodoForm from './AddTodoForm';
+import TodoList from './TodoList';
 
 export default class App extends React.Component {
   state: {
@@ -17,12 +19,18 @@ export default class App extends React.Component {
       visibleTab: 'todolist',
       todosArray: []
     }
-    _.bindAll(this, ['changeTab']);
+    _.bindAll(this, ['changeTab', 'handleTodoAdd']);
   }
   changeTab(selectedTab: string) {
     this.setState({
       visibleTab: selectedTab
     });
+  }
+  handleTodoAdd(todoObj: TodoItem) {
+    this.setState({
+      todosArray: this.state.todosArray.concat([todoObj])
+    });
+    this.changeTab('todolist');
   }
   render() {
     const { visibleTab } = this.state;
@@ -36,7 +44,7 @@ export default class App extends React.Component {
             renderIcon={() => <Icon containerStyle={{justifyContent: 'center', alignItems: 'center', marginTop: 12}} color={'#5e6977'} name='format-list-bulleted' size={33} />}
             renderSelectedIcon={() => <Icon color={'#6296f9'} name='format-list-bulleted' size={30} />}
             onPress={() => this.changeTab('todolist')}>
-            <View style={styles.container}><Text>Todo list</Text></View>
+              <TodoList listData={this.state.todosArray} />
           </Tab>
           <Tab
             titleStyle={{fontWeight: 'bold', fontSize: 10}}
@@ -46,7 +54,7 @@ export default class App extends React.Component {
             renderIcon={() => <Icon containerStyle={{justifyContent: 'center', alignItems: 'center', marginTop: 12}} color={'#5e6977'} name='add' size={33} />}
             renderSelectedIcon={() => <Icon color={'#6296f9'} name='add' size={30} />}
             onPress={() => this.changeTab('addtodo')}>
-            <View style={styles.container}><Text>Add To do</Text></View>
+            <AddTodoForm pushTodoList={this.handleTodoAdd} />
           </Tab>
         </Tabs>
     );

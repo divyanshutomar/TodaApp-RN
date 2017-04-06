@@ -3,5 +3,7 @@
 export type TodoItem = {
   id: string,
   text: string,
+  title: string,
+  cardColor: string,
   completed: boolean
 }
